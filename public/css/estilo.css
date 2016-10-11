@@ -1,0 +1,166 @@
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+#map {
+    height: 500px;
+    width: 100%;
+}
+
+.controls {
+    margin-top: 10px;
+    border: 1px solid transparent;
+    border-radius: 2px 0 0 2px;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    height: 32px;
+    outline: none;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+#pac-input {
+    background-color: #fff;
+    font-family: Roboto;
+    font-size: 15px;
+    font-weight: 300;
+    margin-left: 12px;
+    padding: 0 11px 0 13px;
+    text-overflow: ellipsis;
+    width: 300px;
+}
+
+#pac-input:focus {
+    border-color: #4d90fe;
+}
+
+.pac-container {
+    font-family: Roboto;
+}
+
+#type-selector {
+    color: #fff;
+    background-color: #c5a154;
+    padding: 5px 11px 0px 11px;
+}
+
+#type-selector label {
+    font-family: Roboto;
+    font-size: 13px;
+    font-weight: 300;
+}
+
+#save {
+    border: none;
+}
+
+.fachada {
+    height: 100px;
+    background-color: c5a154;
+}
+
+.content {
+    height: 110px;
+    text-align: center;
+}
+
+.content h1 {
+    font-size: 20px;
+}
+
+.input-group-btn, input {
+    border-radius: 2px;
+}
+
+select {
+    background-color: c5a154;
+    border-radius: 5px;
+    padding: 4px;
+}
+
+select, option {
+    color: white;
+}
+
+#sistema_outro {
+    display: none;
+}
+
+#btn-submit {
+    background-color: c5a154;
+    border-radius: 5px;
+    width: 36%;
+    position: relative;
+    right: 145px;
+    padding: 8px;
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.btn-submir-behavior {
+    margin-top: 20px;
+}
+
+.btn-limpar-behavior {
+    position: relative;
+    top: 54px;
+}
+
+::-webkit-input-placeholder {
+    text-align: center;
+}
+
+.input-left {
+    width: 80%;
+}
+
+.input-right input {
+    border-radius: 0px;
+}
+
+#limpar-form {
+    margin-top: -26.5px;
+    position: relative;
+    right: 300px;
+    width: 41%;
+    color: white;
+    font-size: 15px;
+    font-weight: bold;
+    background-color: c5a154;
+    border-radius: 5px;
+}
+
+#systems_colors {
+    position: relative;
+    left: 357;
+}
+
+#systems_colors ul li {
+    font-weight: 700;
+}
+
+.boxL {
+    width: 15px;
+    height: 15px;
+    display: block;
+    margin-right: 6px;
+    float: left;
+}
+
+.legenda{
+  list-style: none;
+}
+
+.legenda li{
+  float:left;
+  margin-right: 40px;
+}
+
+  #systems_colors ul li{
+    font-weight: 700;
+    list-style: none;
+    width: 150px;
+    text-align: left;
+  }
