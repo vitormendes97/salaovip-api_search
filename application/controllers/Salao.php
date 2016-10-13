@@ -31,7 +31,7 @@ class Salao extends CI_Controller {
       $salao['marker'] = $salaoCp['marker'];
       $salao['sistema'] = $salaoCp['sistema'];
 
-      if($_POST['id_salao'] != null){
+      if($_POST['id_salao'] != null && $_POST['id_salao'] != ""){
         $success = $this->Salao_model->update($salao);
       }
       else{

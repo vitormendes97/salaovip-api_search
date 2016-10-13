@@ -18,6 +18,7 @@ function initMap() {
         center: LatLng,
         zoom: 13
     });
+
     //Criando marker inicial (Originalmente setado coordenadas do SalãoVIP)
     markerInicial = new Marker(LatLng, 'SalãoVIP');
     markerInicial = markerInicial.createMarker(map);
@@ -78,7 +79,6 @@ function initMap() {
         marker.setPosition(place.geometry.location);
         marker.setVisible(true);
 
-
         var address = '';
         if (place.address_components) {
             address = [
@@ -91,11 +91,9 @@ function initMap() {
         infowindow.setContent('<div><strong>' + place.name + '</strong>' + '<p>' + address + '</p> <p>Origem Google</p>');
         infowindow.open(map, marker);
 
-        getSaloesGoogleAPI(lat, lng);
+
         saloesNearBy(lat, lng);
-
-        // getSaloesClientes();
-
+        getSaloesGoogleAPI(lat, lng);
 
     });
 
@@ -125,37 +123,29 @@ function initMap() {
 function getSaloesGoogleAPI(lat, long) {
     //Retorna de acordo com uma geolocalização determinada por input todos os salões num raio de 5km.
     var marker;
-    // Variável de Controle na rotina InputContent
-    var content_type;
+
 
     $.ajax({
         type: "GET",
-        url: 'https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=' + lat + ',' + long + '&radius=2300&types=beauty_salon&key=AIzaSyAuvuPcBcajGcY01Yb8-JAKrRFhOslaoQk',
+        url: 'https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=' + lat + ',' + long + '&radius=2000&types=beauty_salon&key=AIzaSyAuvuPcBcajGcY01Yb8-JAKrRFhOslaoQk',
         success: function(saloes) {
 
             for (var i = 0; i < saloes.results.length; i++) {
                 var salao = saloes.results[i];
-                // saloesLatLng.push(saloes.results[i]);
-                latitude = Number(saloes.results[i].geometry.location.lat);
-                longitude = Number(saloes.results[i].geometry.location.lng);
+
+                // latitude = Number(saloes.results[i].geometry.location.lat);
+                // longitude = Number(saloes.results[i].geometry.location.lng);
+
+
+                salao = padronizarSaloesGoogle(salao);
+
                 var myLatLng = {
-                    lat: latitude,
-                    lng: longitude
+                    lat: salao[0].lat,
+                    lng: salao[0].lng
                 };
 
-                content_type = Object.keys(salao)[3];
-
                 marker = new Marker(myLatLng, 'Google');
-                marker = marker.createMarker(map);
-
-                marker.setIcon( base_url('public/img/markers/desc.png'));
-
-                var infowindow = new infoWindow();
-                infowindow = infowindow.createInfoWindow();
-
-                // var content = '<p style:font-size:20px;>' + salao.name + '</p>' + '<br>' + 'Origem : Google';
-                var content = '<div><strong>' + salao.name + '</strong>' + '<p>' + salao.vicinity + '</p> <p>Origem Google</p>';
-                createWindow(marker, infowindow, content);
+                checarDuplicados(marker,map,salao);
 
             }
 
@@ -180,10 +170,10 @@ function getSaloesClientes() {
         success: function(data) {
 
             var saloes = JSON.parse(data);
-            // console.log(saloes);
+
             for (var i = 0; i < saloes.length; i++) {
                 var salao = saloes[i];
-                console.log(base_url(salao.marker));
+
 
                 var myLatLng = {
                     lat: Number(salao.lat),
@@ -200,7 +190,7 @@ function getSaloesClientes() {
 
                 var content = '<div><strong>' + salao.nome + '</strong>' + '<p>' + salao.endereco + '</p> <p> Origem : ' + salao.origem + '</p>'
                     // var content = '<p style:font-size:20px;>' + salao.nome + '</p>' + '<br>' + 'Origem : ' + salao.origem;
-                createWindow(marker, infowindow, content);
+                createWindow(marker, infowindow, content,salao);
 
             }
         }
@@ -212,7 +202,7 @@ function saloesNearBy(lat, lng) {
 
     var saloes;
     var marker;
-    var content_type;
+
     $.ajax({
         type: "GET",
         data: {
@@ -223,7 +213,7 @@ function saloesNearBy(lat, lng) {
         success: function(data) {
 
             var saloes = JSON.parse(data);
-            // console.log(saloes);
+
             for (var i = 0; i < saloes.length; i++) {
                 var salao = saloes[i];
 
@@ -231,8 +221,6 @@ function saloesNearBy(lat, lng) {
                     lat: Number(salao.lat),
                     lng: Number(salao.lng)
                 };
-
-                 content_type = Object.keys(salao)[1];
 
                 var infowindow = new infoWindow();
                 infowindow = infowindow.createInfoWindow();
@@ -278,6 +266,7 @@ function createWindow(marker, infowindow, content,salao) {
 
 function setInputContent(salao){
 
+    $('#id_salao').val(salao.info_id);
     $('input[name=salaonome]').val(salao.nome);
     $('input[name=endereco]').val(salao.endereco);
     $('input[name=numero]').val(salao.numero);
@@ -292,16 +281,8 @@ function setInputContent(salao){
     $('input[name=celular]').val(salao.cel);
     $('input[name=cep]').val(salao.cep);
 
-    // if(typeof($("#sistema [value='"+salao.sistema.charAt(0)+"']")) === "." ){
-    if(salao.sistema.charAt(0) === '.'){
 
-      // $('#sistema').removeAttr('selected');
-      // $('#sistema_outro').css('display','block');
-      // $('#sistema_outro').css('margin-left','5px');
-      // $('#btn-submit').css('margin-top','20px');
-      // $("#sistema [value='outros']").attr('selected','selected');
-      // $('#sistema_outro').val(salao.sistema);
-      // $('#btn-submit').addClass("btn-submir-behavior");
+    if(salao.sistema.charAt(0) === '.'){
 
       $('#sistema').val('outros');
       teste();
@@ -323,4 +304,73 @@ function setInputContent(salao){
 
 function reload(){
   location.reload();
+}
+
+
+function padronizarSaloesGoogle(salao_google){
+
+    var endereco = salao_google.vicinity.split(",")[0];
+    var numero_etapa1 = salao_google.vicinity.split(",")[1];
+    var numero;
+    var bairro;
+    var cidade = salao_google.vicinity.split(",")[2];
+    var saloes  = [];
+
+    try{
+
+        numero = numero_etapa1.split("-")[0];
+        bairro = numero_etapa1.split("-")[1];
+    }
+    catch(err){
+        numero = numero_etapa1;
+
+    }
+
+    var salao =  {
+        "id" : "google",
+        "endereco" : endereco,
+        "numero" : numero,
+        "bairro" : bairro,
+        "cidade" : cidade,
+        "lat" : Number(salao_google.geometry.location.lat),
+        "lng" : Number(salao_google.geometry.location.lng),
+        "nome" : salao_google.name,
+        "origem" : "Google",
+        "marker" : "/public/img/markers/desc.png",
+        "cep" : "",
+        "responsavel" : "",
+        "tel" : "",
+        "cel" : "" ,
+        "sistema" : "Desconhecido",
+        "full_address" : salao_google.vicinity
+
+    };
+
+
+    saloes.push(salao);
+
+    return saloes; //Sempre vai retornar um array na posição 0 pois sempre que passa pelo método ele instancia um var saloes novo. (Refatorar isso)
+
+}
+
+  // Essa função compara as lats e lngs do google e do banco. Se houver informação igual entre ambos, a informação do google é excluida
+function checarDuplicados(marker,map,salao){
+
+  if( map.getBounds().contains(marker.getLocation())){
+      marker = null;
+      salao = null;
+
+  }
+  else{
+
+    marker = marker.createMarker(map);
+    marker.setIcon( base_url(salao[0].marker));
+
+    var infowindow = new infoWindow();
+    infowindow = infowindow.createInfoWindow();
+
+    var content = '<div><strong>' + salao[0].nome + '</strong>' + '<p>' + salao[0].full_address + '</p> <p>Origem Google</p>';
+    createWindow(marker, infowindow, content,salao[0]);
+  }
+
 }

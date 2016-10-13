@@ -113,7 +113,7 @@
                   <input type="text" name="url" class="form-control" aria-label="..." placeholder="http://site.com.br" style="position:relative; bottom:41px;">
                   <button type="button" onclick="reload()" id="limpar-form" style="padding:10px;"><i class="fa fa-retweet" aria-hidden="true" style="padding-right:4px;"></i>Limpar</button>
                </div>
-               <input type="hidden" name="id_salao">
+               <input type="hidden" name="id_salao" id="id_salao">
                <div class="row">
                </div>
             </form>
@@ -121,7 +121,7 @@
       </div>
       <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAqFOCPC6PPodbDty4fT0X9zSyyPL6OEcM&signed_in=true&libraries=places&callback=initMap" async defer></script>
       <script type="text/javascript">
-         
+
          function base_url(parametro){
             return '<?php echo base_url() ?>'+parametro;
          }

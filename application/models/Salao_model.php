@@ -89,22 +89,47 @@
        }
 
        $this->load->database();
-      $sql = (          'SELECT *,
-                        111.045* DEGREES(ACOS(COS(RADIANS(latpoint))
-                        * COS(RADIANS(lat))
-                        * COS(RADIANS(longpoint) - RADIANS(lng))
-                        + SIN(RADIANS(latpoint))
-                        * SIN(RADIANS(lat)))) AS distance_in_km
-                          FROM informacao i
-                          JOIN ( SELECT ? AS latpoint, ?  AS longpoint ,  2.6 AS radius,  111.045 AS distance_unit ) AS p ON 1=1
-                          WHERE i.lat
-                          BETWEEN p.latpoint  - (p.radius / p.distance_unit)
-                          AND p.latpoint  + (p.radius / p.distance_unit)
-                          AND  i.lng
-                          BETWEEN p.longpoint - (p.radius / (p.distance_unit * COS(RADIANS(p.latpoint))))
-                          AND p.longpoint + (p.radius / (p.distance_unit * COS(RADIANS(p.latpoint))))
-                          ORDER BY distance_in_km ASC
-                          LIMIT 20;'
+      $sql = (          'SELECT
+	*
+FROM
+	(
+		SELECT
+			*, 111.045 * DEGREES(
+				ACOS(
+					COS(RADIANS(latpoint)) * COS(RADIANS(lat)) * COS(
+						RADIANS(longpoint) - RADIANS(lng)
+					) + SIN(RADIANS(latpoint)) * SIN(RADIANS(lat))
+				)
+			) AS distance_in_km
+		FROM
+			informacao i
+		JOIN (
+			SELECT
+				? AS latpoint,
+				? AS longpoint,
+				2 AS radius,
+				111.045 AS distance_unit
+		) AS p ON 1 = 1
+		WHERE
+			i.lat BETWEEN p.latpoint - (p.radius / p.distance_unit)
+		AND p.latpoint + (p.radius / p.distance_unit)
+		AND i.lng BETWEEN p.longpoint - (
+			p.radius / (
+				p.distance_unit * COS(RADIANS(p.latpoint))
+			)
+		)
+		AND p.longpoint + (
+			p.radius / (
+				p.distance_unit * COS(RADIANS(p.latpoint))
+			)
+		)
+		ORDER BY
+			distance_in_km ASC
+	) tb
+WHERE
+	tb.distance_in_km <= 3
+ORDER BY
+	tb.distance_in_km ASC'
            );
 
 
@@ -193,7 +218,7 @@
 
           switch ($sistema) {
             case 'svip':
-              $marker = 'public/img/markers/svip.png';
+              $marker = '/public/img/markers/svip.png';
               $sistema = 'SalãoVIP';
               return array(
                               "marker" => $marker,
@@ -201,7 +226,7 @@
                           );
               break;
             case 'graces':
-              $marker = 'public/img/markers/graces.png';
+              $marker = '/public/img/markers/graces.png';
               $sistema = 'Graces';
               return array(
                               "marker" => $marker,
@@ -210,7 +235,7 @@
             break;
 
             case 'teles':
-              $marker = 'public/img/markers/telles.png';
+              $marker = '/public/img/markers/telles.png';
               $sistema = 'Teles';
               return array(
                               "marker" => $marker,
@@ -219,7 +244,7 @@
               break;
 
             case 'square':
-              $marker = 'public/img/markers/square.png';
+              $marker = '/public/img/markers/square.png';
               $sistema = 'Square';
               return array(
                               "marker" => $marker,
@@ -228,7 +253,7 @@
               break;
 
             case 'az':
-              $marker = 'public/img/markers/az.png';
+              $marker = '/public/img/markers/az.png';
               $sistema = 'AZ';
               return array(
                               "marker" => $marker,
@@ -237,7 +262,7 @@
               break;
 
             case 'bdate':
-              $marker = 'public/img/markers/beautydate.png';
+              $marker = '/public/img/markers/beautydate.png';
               $sistema = 'Beauty Date';
               return array(
                               "marker" => $marker,
@@ -246,7 +271,7 @@
               break;
 
             case 'sa':
-              $marker = 'public/img/markers/superagendador.png';
+              $marker = '/public/img/markers/superagendador.png';
               $sistema = 'Super Agendador';
               return array(
                               "marker" => $marker,
@@ -255,7 +280,7 @@
               break;
 
             case 'trinks':
-            $marker = 'public/img/markers/trinks.png';
+            $marker = '/public/img/markers/trinks.png';
             $sistema = 'Trinks';
             return array(
                             "marker" => $marker,
@@ -264,7 +289,7 @@
             break;
 
             case 'outros':
-              $marker = 'public/img/markers/others.png';
+              $marker = '/public/img/markers/others.png';
               $sistema = "outros";
               return array(
                               "marker" => $marker,
@@ -273,7 +298,7 @@
               break;
 
               case 'desconhecido':
-                $marker = 'public/img/markers/desc.png';
+                $marker = '/public/img/markers/desc.png';
                 $sistema = 'Desconhecido';
                 return array(
                                 "marker" => $marker,
@@ -282,7 +307,7 @@
                 break;
 
             default:
-                $marker = 'public/img/markers/desc.png';
+                $marker = '/public/img/markers/desc.png';
                 $sistema = 'Desconhecido';
                 return array(
                                 "marker" => $marker,
