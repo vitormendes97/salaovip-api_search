@@ -73,7 +73,7 @@
                      <input type="text" class="form-control" name="latitude" aria-label="..." style="width:100%;margin-top:10px;">
                      <br><br><br><br>
                      <select name="sistema" onchange="teste()" id="sistema" style="margin-left:-14px;">
-                        <option value="#">Sistema</option>
+                        <optgroup label="Sistema">
                         <option value="svip">SalãoVIP</option>
                         <option value="graces">Graces</option>
                         <option value="teles">Teles</option>
@@ -84,6 +84,10 @@
                         <option value="trinks">Trinks</option>
                         <option value="outros">Outros</option>
                         <option value="desconhecido">Desconhecido</option>
+                        </optgroup>
+                        <optgroup label="Status">
+                           <option value="closed">Fechado</option>
+                        </optgroup>
                      </select>
                      <br><br>
                      <input type="text" placeholder="Digite aqui o sistema" class="form-control" aria-label="..." name="sistema_outro" id="sistema_outro">
